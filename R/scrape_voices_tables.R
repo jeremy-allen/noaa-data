@@ -2,7 +2,7 @@ scrape_voices_tables <- function() {
 
   voices_base_url <- "https://voices.nmfs.noaa.gov"
 
-  session <- bow(str_c(voices_base_url, "/search"), force = TRUE)
+  session <- bow(str_c(voices_base_url, "/search"), delay = 6, verbose = TRUE)
   
   pages <- 1:27
 
@@ -24,7 +24,24 @@ scrape_voices_tables <- function() {
     
     # Scrape the page
     message(paste0("\nscraping page ", page_num, "\n"))
-    response <- scrape(polite_session, query = query_params)
+
+    tryCatch({
+      response <- scrape(polite_session, query = query_params, verbose = TRUE)
+    },
+    error = function(e) {
+      # Log the error
+      message(paste("Failed to scrape page", page_num, "\nError:", e$message))
+      # Write to a file of failed scrapes
+      failed_scrape_info <- sprintf("\nFailed to scrape page: %d\nError: %s\n", page_num, e$message)
+      write(failed_scrape_info, "failed_scrapes.txt", append = TRUE)
+    
+      # Return NULL to indicate failure
+      NULL
+    })
+
+    if (is.null(response)) {
+      return(NULL)  # Exit the function early if scraping failed
+    }
     
     interviewee_html_links <- response |>
       html_element("table") |>

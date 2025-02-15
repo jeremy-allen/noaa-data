@@ -5,7 +5,7 @@ library(fs)
 source("R/get_media_links.R")
 source("R/scrape_voices_tables.R")
 
-
+# get the complete table of interview metadata and links
 if (!fs::file_exists("data/responses_list.rds")) {
   message("\nNo data found on disk, attempting to scrape now\n")
   scrape_voices_tables()
@@ -20,6 +20,8 @@ voices_base_url <- "https://voices.nmfs.noaa.gov"
 
 session <- bow(str_c(voices_base_url), force = TRUE, delay = 8)
 set_rip_delay(8)
+
+# loop through each interviewee and download their media
 
 for (i in seq_along(interviewee_meta_df$Interviewee_url)) {
   
@@ -85,10 +87,3 @@ for (i in seq_along(interviewee_meta_df$Interviewee_url)) {
   }
 
 }
-
-interviewee_meta_df |> 
-  filter(str_detect(Interviewee, "Fund")) |> pull(Interviewee_url)
-
-which(str_detect(interviewee_meta_df$Interviewee, "Fund"))
-
-

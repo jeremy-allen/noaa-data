@@ -2,6 +2,11 @@
 
 ## Download all audio recordings and transcripts of [NOAA's Voices Oral History Archives](https://voices.nmfs.noaa.gov/).
 
+In their own words:
+>Collecting and sharing oral history interviews related to the changing environment, climate, oceans and coasts since 2003.
+
+## Usage
+
 The `voices_resecue.R` file orchestrates the download of two main components:
 1. [The table](https://voices.nmfs.noaa.gov/search) of metadata and links to over 2000 interviewees and their files
 2. The recordings and transcripts of each interview
